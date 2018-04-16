@@ -23,7 +23,8 @@
 
 ```java
 @Authorization
-public class AuthorizationContainerRequestFilter extends org.fastquery.httpsign.AuthAbstractContainerRequestFilter {
+public class AuthorizationContainerRequestFilter extends 
+		org.fastquery.httpsign.AuthAbstractContainerRequestFilter {
 	@Override
 	public String getAccessKeySecret(String accessKeyId) {
 		// 根据 accessKeyId 找出 accessKeySecret
@@ -34,7 +35,8 @@ public class AuthorizationContainerRequestFilter extends org.fastquery.httpsign.
 ### 编写作用于客户端的`ClientRequestFilter`
 
 ```java
-public class AuthorizationClientRequestFilter extends org.fastquery.httpsign.AuthAbstractClientRequestFilter {
+public class AuthorizationClientRequestFilter extends 
+		org.fastquery.httpsign.AuthAbstractClientRequestFilter {
 	@Override
 	public String getAccessKeySecret(String accessKeyId) {
 		// 根据 accessKeyId 找出 accessKeySecret
@@ -71,12 +73,12 @@ javax.ws.rs.client.WebTarget target = client.target("http://localhost:8080").pat
 
 ```xml
 <jaxrs:server address="http://localhost...">
-<jaxrs:serviceBeans>
-	<bean class="... ..." /> 
-</jaxrs:serviceBeans>
-	<jaxrs:providers>
-		<bean class="org.fastquery.httpsign.sample.AuthorizationContainerRequestFilter" />
-	</jaxrs:providers>
+	<jaxrs:serviceBeans>
+		<bean class="... ..." /> 
+	</jaxrs:serviceBeans>
+		<jaxrs:providers>
+			<bean class="org.fastquery.httpsign.sample.AuthorizationContainerRequestFilter" />
+		</jaxrs:providers>
 </jaxrs:server>
 ```
 
@@ -84,9 +86,9 @@ javax.ws.rs.client.WebTarget target = client.target("http://localhost:8080").pat
 
 ```xml
 <jaxrs:client address="<your request address>" serviceClass="<your request service>">
-<jaxrs:providers>
-	<bean class="org.fastquery.httpsign.sample.AuthorizationClientRequestFilter" />
-</jaxrs:providers>
+	<jaxrs:providers>
+		<bean class="org.fastquery.httpsign.sample.AuthorizationClientRequestFilter" />
+	</jaxrs:providers>
 </jaxrs:client>
 ```
 
@@ -341,7 +343,7 @@ URL端口与QueryString之间的地址,不含"?",在此称之为URIPath.举例:
 	
 		```js
 		{
-			"nonce" : "1aabcde-5268-3326-c845-56kljgwexe",
+		    "nonce" : "1aabcde-5268-3326-c845-56kljgwexe",
 		    "action" : "myInfo",
 		    "offset" : 1,
 		    "secretKeyId" : "BKJGW40598092JXMWNRF",
