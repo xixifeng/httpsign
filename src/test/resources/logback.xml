@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/2002/xmlspec/dtd/2.10/xmlspec.dtd">
+<configuration>
+  <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>级别:【%p】 信息:%m 位置: %caller{1} 发生时间:%d{yyyy-MM-dd HH:mm:ss}%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="warn">
+    <appender-ref ref="Console" />
+  </root>
+  
+  <logger name="org.fastquery" level="debug" additivity="false">
+    <appender-ref ref="Console" />
+  </logger>
+</configuration>
