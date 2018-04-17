@@ -76,9 +76,9 @@ javax.ws.rs.client.WebTarget target = client.target("http://localhost:8080").pat
 	<jaxrs:serviceBeans>
 		<bean class="... ..." /> 
 	</jaxrs:serviceBeans>
-		<jaxrs:providers>
-			<bean class="org.fastquery.httpsign.sample.AuthorizationContainerRequestFilter" />
-		</jaxrs:providers>
+	<jaxrs:providers>
+		<bean class="org.fastquery.httpsign.sample.AuthorizationContainerRequestFilter" />
+	</jaxrs:providers>
 </jaxrs:server>
 ```
 
@@ -186,10 +186,10 @@ Authorization的值如何得到,其计算规则如下:
 ```java
 Signature = base64(SignatureMethod(AccessKeySecret,
             HttpMethod + "\n"
-            + Content-MD5 + "\n"  // 注意: 如果Content-MD5为""或null,后面就不能 + "\n" 了(去掉该行)
+            + Content-MD5 + "\n" //注意: 如果Content-MD5为""或null,后面就不能 + "\n" 了(去掉该行)
             + Accept + "\n" 
             + Date + "\n" 
-            + BuildCustomHeaders + "\n" // 注意: 如果BuildCustomHeaders为""或null,后面就不能 + "\n" 了(去掉该行)
+            + BuildCustomHeaders + "\n" //注意: 如果BuildCustomHeaders为""或null,后面就不能 + "\n" 了(去掉该行)
             + URIPath + "\n"
             + BuildRequestParameters))
             
@@ -339,7 +339,7 @@ URL端口与QueryString之间的地址,不含"?",在此称之为URIPath.举例:
 	按字典升序排列后,参数值经过上个步骤编好码后, 参数名和参数值用`=`连接,参数与参数之间用`&`连接. 截至这里,BuildRequestParameters构建完成.  
 	
 	- 9.4 举例:  
-	现有个6个参数   
+	假设有6个参数   
 	
 		```js
 		{
