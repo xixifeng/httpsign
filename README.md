@@ -101,12 +101,11 @@ javax.ws.rs.client.WebTarget target = client.target("http://localhost:8080").pat
 |[ ]|可选项|
 |{ }|必选项|
 |&#124;|互斥关系|
-|等宽字体Courier New|屏幕输出|
 |标点符号|本文一律采用英文标点符号|
 
-### 参数名命名规则
+### 请求参数名,命名规则
 1. 首字母小写,如果名称由多个单词组成,每个单词的首字母都要大写
-2. 常量名全部大写
+2. 英文缩写词一律小写
 3. 只能由 [A\~Z]、[a\~z]、[0\~9] 以及字符"-"、"_"、"." 组成参数名
 4. 不能以数字开头
 5. 不允许出现中文及拼音命名
@@ -160,27 +159,27 @@ javax.ws.rs.client.WebTarget target = client.target("http://localhost:8080").pat
 |名称|是否必选|描述|
 |:-----|:-----:|:-----|
 |Authorization|是|用于验证请求合法性的认证信息|
-|Accept|是|默认:"application/json",表示发送端（客户端）希望从服务端接受到的数据类型|
+|Accept|是|默认:"application/json",表示发送端(客户端)希望从服务端接受到的数据类型|
 |Content-Length|是|[RFC2616](https://tools.ietf.org/html/rfc2616)中定义的HTTP请求内容长度(一般的http客户端工具都会自动带上这个请求头)|
 |Date|是|HTTP 1.1协议中规定的GMT时间,例如：Wed, 28 Mar 2018 09:09:19 GMT|
 |Host|是|访问Host值(一般的http客户端工具都会自动带上这个请求头)|
 
 
-### 公共请求参数(Http Request Parameters)
+### 公共请求参数(Common Http Request Parameters)
 |名称|是否必选|类型|描述|
 |:-----|:-----:|:-----|:-----|
 |version|是|String|API 版本号,当前值为1|
-|action|是|String|接口的指令名称,如,调用查看个人信息接口,则action的值为:myInfo|
+|action|是|String|接口的指令名称,如:action=myInfo|
 |nonce|是|String|随机数,长度范围\[8,36\]|
 |accessKeyId|是|String|在云API密钥上申请的标识身份的 accessKeyId,一个 accessKeyId 对应唯一的 accessKeySecret , 而 accessKeySecret 会用来生成请求签名 Signature|
 |signatureMethod|否|String|签名算法,目前支持HMACSHA256和HMACSHA1.默认采用:HMACSHA1验证签名|
 |token|否|String|临时证书所用的Token,需要结合临时密钥一起使用|
 
-服务端将从 Querystring 获得这些参数. 
+服务端将从 QueryString 获得这些参数. 
 
 
 ## 签名机制
-用户在HTTP请求中增加`Authorization`的Header来包含签名(Signature)信息,表明这个消息已被签名,认证是否通过服务端说了算.  
+用户在HTTP请求中增加`Authorization`的Header来包含签名(Signature)信息,表明这个消息已被签名,认证是否通过,服务端说了算.  
 Authorization的值如何得到,其计算规则如下:
 
 ```java
@@ -206,9 +205,9 @@ Authorization = "Basic " + Signature
 可选值,GET,POST,PUT,DELETE,PATCH,HEAD,OPTIONS.
 
 - 4.Content-MD5  
-表示请求主体(Request Body)数据的MD5值,对消息内容（不包括头部）计算MD5值获得128bit(比特位)数字,对该数字进行Base64编码而得到,如果没有Body该值为""(空字符串).  
+表示请求主体(Request Body)数据的MD5值,对消息内容(不包括头部)计算MD5值获得128bit(比特位)数字,对该数字进行Base64编码而得到,如果没有Body该值为""(空字符串).  
 注意: Content-MD5如果为""(空字符串),末尾的"\n"必须去掉.     
-MD5计算方法,假设,body内容为"**好好学习,天天向上**",计算其Content-MD5,以Java代码作为示例:
+假设,body内容为"**好好学习,天天向上**",计算其Content-MD5,以Java代码作为示例:
 	
 	```java
 	// 待计算的内容
@@ -220,7 +219,7 @@ MD5计算方法,假设,body内容为"**好好学习,天天向上**",计算其Con
 	messageDigest.update(input);
 	byte[] md5Bytes =messageDigest.digest();
 	
-	// 2. 再对这个字节数组进行Base64编码（而不是对长度为32的MD5字符串进行编码）。
+	// 2. 再对这个字节数组进行Base64编码(而不是对长度为32的MD5字符串进行编码)。
 	// Java 8+ 中自带的Base64工具(java.util.Base64)
 	String str = java.util.Base64.getEncoder().encodeToString(md5Bytes);
 	
@@ -234,14 +233,29 @@ MD5计算方法,假设,body内容为"**好好学习,天天向上**",计算其Con
 可选值: application/json 或 application/xml.
 
 - 6.Date  
-表示此次请求的当前时间,必须为GMT时间,如"Wed, 28 Mar 2018 09:09:19 GMT".
+表示此次请求的当前时间,必须为GMT时间,如"Wed, 28 Mar 2018 09:09:19 GMT".  
+以Java代码作为示例,怎么获得GMT时间:
+
+```java
+// RFC 822 日期格式
+String f = "EEE, dd MMM yyyy HH:mm:ss z";
+java.text.SimpleDateFormat rfc822DateFormat = new java.text.SimpleDateFormat(f, java.util.Locale.US);
+rfc822DateFormat.setTimeZone(new java.util.SimpleTimeZone(0, "GMT"));
+
+// 将date格式化成GMT时间格式的字符串
+java.util.Date date = new java.util.Date();
+String gmtStr = rfc822DateFormat.format(date);
+
+// 将GMT时间格式的字符串解析成Date对象
+java.util.Date d = rfc822DateFormat.parse(gmtStr);
+```
 
 - 7.BuildCustomHeaders  
 	所有以`X-Custom-`做为前缀的HTTP Header被称为自定义请求头.    
 	BuildCustomHeaders构建规则如下:  
 	7.1 将所有以`X-Custom-`为前缀的HTTP请求头的名字转换成小写,例如将"X-Custom-Meta-Author: FastQuery"转换成"x-custom-meta-author: FastQuery".    
 	7.2 将上一步得到的所有HTTP请求头做字典升序排列.  
-	7.3 请求头名称与内容之间用":"号隔开,并且需要清空分割符":"左右的空白.例如将"x-custom-meta-author : FastQuery"处理成"x-custom-meta-author:FastQuery".  
+	7.3 请求头名称与内容之间用":"号隔开,并且需要清空分割符":"左右的空白.例如需要将"x-custom-meta-author : FastQuery"处理成"x-custom-meta-author:FastQuery".  
 	7.4 每个完整的请求头(头名称:内容),它们之间用"\n"进行分隔,最后拼接成BuildCustomHeaders.  
 	7.5 BuildCustomHeaders 允许为""(空字符串).  
 	举例:  	
@@ -325,8 +339,8 @@ URL端口与QueryString之间的地址,不含"?",在此称之为URIPath.举例:
 		`URLEncoder.encode("*", "utf-8")` 输出的结果是 `*`, [RFC3986](https://tools.ietf.org/html/rfc3986?spm=a2c4g.11186623.2.6.qtLqZF)规定,没有说不对`*`这个符号进行编码.   
 		`URLEncoder.encode(" ", "utf-8")` 输出的结果是 `+`,   [RFC3986](https://tools.ietf.org/html/rfc3986?spm=a2c4g.11186623.2.6.qtLqZF)规定,编码结果采用%XY格式(XY: 16进制字面).  
 		目前发现这些差异性   
-		因此,使用JAVA的URLEncoder进行URL编码,不能满足我们所约定的编码规范,需要对它的处理结果稍作该进便可.   
-		将URLEncoder.encode处理的结果的`+` 替换成`%20`,`*` 替换成 `%2A` `%7E` 替换回`~`.  
+		因此,使用JAVA的URLEncoder进行URL编码,不能满足我们所约定的编码规范,需要对它的处理结果稍作该进.   
+		将URLEncoder.encode处理的结果的`+` 替换成`%20`,`*` 替换为 `%2A` `%7E` 替换回`~`.  
 		
 			```java
 			private static String specialUrlEncode(String value) throws UnsupportedEncodingException {
@@ -339,7 +353,7 @@ URL端口与QueryString之间的地址,不含"?",在此称之为URIPath.举例:
 	按字典升序排列后,参数值经过上个步骤编好码后, 参数名和参数值用`=`连接,参数与参数之间用`&`连接. 截至这里,BuildRequestParameters构建完成.  
 	
 	- 9.4 举例:  
-	假设有6个参数   
+	假设有6个参数:   
 	
 		```js
 		{
