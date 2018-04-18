@@ -22,7 +22,7 @@
 ### 编写作用于服务端的`ContainerRequestFilter` 
 
 ```java
-@Authorization
+@org.fastquery.httpsign.Authorization
 public class AuthorizationContainerRequestFilter extends 
 		org.fastquery.httpsign.AuthAbstractContainerRequestFilter {
 	@Override
@@ -561,15 +561,15 @@ org.junit.Assert.assertThat(authorization,
 |40008|名称为nonce的请求参数没有传递.|
 |40009|nonce的长度不能超过36且不能小与8.|
 |40010|名称为accessKeyId的请求参数没有传递.|
-|40011|根据accessKeyId没有找到对应的accessKeySecret|
-|40012|签名算法要么传递HMACSHA1或HMACSHA256,要不传递(默认:HMACSHA1)|
-|40013|传递的token错误|
-|40014|token认证失败|
+|40011|根据accessKeyId没有找到对应的accessKeySecret.|
+|40012|签名算法要么传递HMACSHA1或HMACSHA256,要不传递(默认:HMACSHA1).|
+|40013|传递的token错误.|
+|40014|token认证失败.|
 |40015|有请求body,而没有传递请求头Content-MD5.|
 |40016|计算请求body的MD5出错.|
 |40017|生成请求头Authorization出错.|
 |40018|传过来的Authorization是错的.|
-|40300|在10分钟内不能传递相同的随机码|
+|40300|在10分钟内不能传递相同的随机码.|
 
 
 

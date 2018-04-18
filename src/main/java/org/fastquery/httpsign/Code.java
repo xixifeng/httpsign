@@ -40,15 +40,15 @@ public enum Code {
 	E40008("名称为nonce的请求参数没有传递."), 
 	E40009("nonce的长度不能超过36且不能小与8."), 
 	E40010("名称为accessKeyId的请求参数没有传递."), 
-	E40011("根据accessKeyId没有找到对应的accessKeySecret"), 
-	E40012("签名算法要么传递HMACSHA1或HMACSHA256,要不传递(默认:HMACSHA1)"), 
-	E40013("传递的token错误"), 
-	E40014("token认证失败"), 
+	E40011("根据accessKeyId没有找到对应的accessKeySecret."), 
+	E40012("签名算法要么传递HMACSHA1或HMACSHA256,要不传递(默认:HMACSHA1)."), 
+	E40013("传递的token错误."), 
+	E40014("token认证失败."), 
 	E40015("有请求body,而没有传递请求头Content-MD5."),
 	E40016("计算请求body的MD5出错."), 
 	E40017("生成请求头Authorization出错."), 
 	E40018("传过来的Authorization是错的."),
-	E40300("在10分钟内不能传递相同的随机码");
+	E40300("在10分钟内不能传递相同的随机码.");
 
 	private String message;
 	private String msg = "";
