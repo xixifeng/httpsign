@@ -184,12 +184,12 @@ javax.ws.rs.client.WebTarget target = client.target("http://localhost:8080").pat
 ### 公共请求参数(Common Http Request Parameters)
 |名称|是否必选|类型|描述|
 |:-----|:-----:|:-----|:-----|
-|version|是|String|API 版本号,当前值为1|
-|action|是|String|接口的指令名称,如:action=myInfo|
-|nonce|是|String|随机数,长度范围\[8,36\]|
-|accessKeyId|是|String|在云API密钥上申请的标识身份的 accessKeyId,一个 accessKeyId 对应唯一的 accessKeySecret , 而 accessKeySecret 会用来生成请求签名 Signature|
-|signatureMethod|否|String|签名算法,目前支持HMACSHA256和HMACSHA1.默认采用:HMACSHA1验证签名|
-|token|否|String|临时证书所用的Token,需要结合临时密钥一起使用|
+|version|是|`String`|API 版本号,当前值为1|
+|action|是|`String`|接口的指令名称,如:action=myInfo|
+|nonce|是|`String`|随机数,长度范围\[8,36\]|
+|accessKeyId|是|`String`|在云API密钥上申请的标识身份的 accessKeyId,一个 accessKeyId 对应唯一的 accessKeySecret , 而 accessKeySecret 会用来生成请求签名 Signature|
+|signatureMethod|否|`String`|签名算法,目前支持HMACSHA256和HMACSHA1.默认采用:HMACSHA1验证签名|
+|token|否|`String`|临时证书所用的Token,需要结合临时密钥一起使用|
 
 服务端将从 QueryString 获得这些参数. 
 
@@ -396,7 +396,7 @@ URL端口与QueryString之间的地址,不含"?",在此称之为URIPath.举例:
 		步骤2: 遵循[RFC3986](https://tools.ietf.org/html/rfc3986?spm=a2c4g.11186623.2.6.qtLqZF)规定对请求参数的名称和参数值进行URL编码  
 	
 		步骤3: 拼接参数  
-		`action=myInfo&limit=15&nonce=1aabcde-5268-3326-c845-56kljgwexe&offset=1&secretKeyId=BKJGW40598092JXMWNRF` 这就是BuildRequestParameters. 
+		**action=myInfo&limit=15&nonce=1aabcde-5268-3326-c845-56kljgwexe&offset=1&secretKeyId=BKJGW40598092JXMWNRF** 这就是BuildRequestParameters. 
 		
 **例**,根据如下假设,计算出`Authorization`.  
 设, AccessKeySecret 为: "KYA8A4-74E17B58B093";  
