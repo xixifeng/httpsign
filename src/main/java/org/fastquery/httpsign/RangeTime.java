@@ -23,6 +23,7 @@
 package org.fastquery.httpsign;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -52,11 +53,25 @@ public final class RangeTime {
 	 * @param current 当前时间
 	 */
 	private static void del(long current) {
+
+		Iterator<Long> iterator = map.keySet().iterator();
+		while (iterator.hasNext()) {
+			Long k = iterator.next();
+			if (Math.abs(k.longValue() - current) > SignBuilder.TIME_LIMIT * 2) {
+				map.remove(k);
+			}
+		}
+		
+		/**
+		 * <pre>
+		// 这样写会导致 java.util.ConcurrentModificationException
 		map.forEach((k, v) -> {
 			if (Math.abs(k.longValue() - current) > SignBuilder.TIME_LIMIT * 2) {
 				map.remove(k);
 			}
 		});
+		</pre>
+		 */
 	}
 
 	/**

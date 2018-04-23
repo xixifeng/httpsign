@@ -186,7 +186,7 @@ public abstract class AuthAbstractContainerRequestFilter implements ContainerReq
 		
 		String httpMethod = requestContext.getMethod();
 		String contentMD5 = requestContext.getHeaderString("Content-MD5");
-		if(requestContext.hasEntity() && contentMD5 == null) {
+		if(requestContext.getLength() > 0 && contentMD5 == null) {
 			requestContext.abortWith(ReplyBuilder.error(Code.E40015).build());
 			return;
 		}

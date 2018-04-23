@@ -19,6 +19,22 @@
 </dependency>
 ``` 
 
+### 准备一个JAX-RS Resource Classes
+
+```java
+@javax.ws.rs.Path("helloworld")
+public class HelloWorldResource {
+
+  @org.fastquery.httpsign.Authorization // 作用在方法上,那么该方法必须要签名认证
+  @javax.ws.rs.GET
+  @javax.ws.rs.Produces("text/plain")
+  public String getHello() {
+      return "hi";
+  }
+  
+}
+```
+
 ### 编写作用于服务端的`ContainerRequestFilter` 
 
 ```java

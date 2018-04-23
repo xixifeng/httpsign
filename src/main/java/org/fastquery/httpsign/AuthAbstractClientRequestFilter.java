@@ -31,10 +31,8 @@ import java.util.Arrays;
 import java.util.TreeMap;
 import java.util.UUID;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
 
@@ -48,10 +46,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AuthAbstractClientRequestFilter implements ClientRequestFilter, AccessAccount {
 
 	private static final Logger LOG = LoggerFactory.getLogger(AuthAbstractClientRequestFilter.class);
-
-	@Context
-	private HttpServletRequest request;
-
+	
 	/**
 	 * 设置请求头
 	 * 
@@ -84,12 +79,8 @@ public abstract class AuthAbstractClientRequestFilter implements ClientRequestFi
 		requestContext.setUri(uri);
 
 		// 获取accessKeyId 直接去读配置文件
-		String accessKeyId;
-		if (request != null) {
-			accessKeyId = request.getParameter("accessKeyId");
-		} else {
-			accessKeyId = new QueryStringParser(uri.getQuery()).get("accessKeyId");
-		}
+		String accessKeyId = new QueryStringParser(uri.getQuery()).get("accessKeyId");
+
 		// 根据 accessKeyId 获取 accessKeySecret
 		String accessKeySecret = getAccessKeySecret(accessKeyId);
 
