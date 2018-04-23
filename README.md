@@ -15,7 +15,7 @@
 <dependency>
     <groupId>org.fastquery</groupId>
     <artifactId>httpsign</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
 </dependency>
 ``` 
 
@@ -183,7 +183,7 @@ javax.ws.rs.client.WebTarget target = client.target("http://localhost:8080").pat
 
 ### 公共请求参数(Common Http Request Parameters)
 |名称|是否必选|类型|描述|
-|:-----|:-----:|:-----|:-----|
+|:-----|:-----:|:-----:|:-----|
 |version|是|`String`|API 版本号,当前值为1|
 |action|是|`String`|接口的指令名称,如:action=myInfo|
 |nonce|是|`String`|随机数,长度范围\[8,36\]|
