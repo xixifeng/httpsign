@@ -108,7 +108,7 @@ javax.ws.rs.client.WebTarget target = client.target("http://localhost:8080").pat
 </jaxrs:client>
 ```
 
-## 详细设计
+##  HTTP Sign 的设计
 
 ### 字面约定
 |字面格式|含义|
@@ -586,6 +586,11 @@ org.junit.Assert.assertThat(authorization,
 |40017|生成请求头Authorization出错.|
 |40018|传过来的Authorization是错的.|
 |40300|在10分钟内不能传递相同的随机码.|
+
+版权归[习习风](https://gitee.com/xixifeng.com)所有,请认准开源地址:   
+https://gitee.com/xixifeng.com/httpsign  
+https://github.com/xixifeng/httpsign   
+以获得最近更新.
 
 
 
