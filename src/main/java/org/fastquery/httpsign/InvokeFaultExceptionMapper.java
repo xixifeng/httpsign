@@ -46,7 +46,7 @@ public class InvokeFaultExceptionMapper implements ExceptionMapper<Throwable> {
 			WebApplicationException wae = (WebApplicationException) throwable;
 			return ReplyBuilder.error(wae.getResponse().getStatus(),wae.getMessage()).build();
 		} else {
-			throw new RuntimeException("未知错误,有待处理");
+			throw new RuntimeException("未知错误,有待处理",throwable);
 		}
 	}
 	

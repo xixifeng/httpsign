@@ -22,9 +22,12 @@
 
 package org.fastquery.httpsign;
 
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -109,19 +112,32 @@ public abstract class AuthAbstractClientRequestFilter implements ClientRequestFi
 		});
 
 		String httpMethod = requestContext.getMethod();
-		String contentMD5 = null;
-		if(requestContext.hasEntity()) {
+		String contentMD5 = requestContext.getHeaderString("Content-MD5");
+		if(requestContext.hasEntity()  && contentMD5 == null) {
 			
-			if(requestContext.getEntityType() == String.class) {
+			Type entityType = requestContext.getEntityType();
+			
+			if(entityType == String.class) {
 				String body = requestContext.getEntity().toString();
 				byte[] bytes;
 				try {
 					bytes = BinaryUtil.calculateMd5(body.getBytes(Charset.forName(SignBuilder.UTF8)));
 				} catch (NoSuchAlgorithmException e) {
+					LOG.warn(e.getMessage(),e);
 					requestContext.abortWith(ReplyBuilder.error(Code.E40016).build());
 					return;
 				}
 				contentMD5 = BinaryUtil.toBase64String(bytes);
+			} else if(entityType == File.class) {
+				File file = (File) requestContext.getEntity();
+				// 计算出file的md5
+				try {
+					contentMD5 = BinaryUtil.toBase64String(BinaryUtil.calculateMd5(Files.readAllBytes(file.toPath())));
+				} catch (NoSuchAlgorithmException e) {
+					LOG.warn(e.getMessage(),e);
+					requestContext.abortWith(ReplyBuilder.error(Code.E40016).build());
+					return;
+				}
 			}
 		}
 		String contentType = requestContext.getHeaderString("Accept");
@@ -134,6 +150,7 @@ public abstract class AuthAbstractClientRequestFilter implements ClientRequestFi
 		try {
 			sign = SignBuilder.sign(accessKeySecret, stringFactor,signatureMethod);
 		} catch (InvalidKeyException | NoSuchAlgorithmException e) {
+			LOG.warn(e.getMessage(),e);
 			requestContext.abortWith(ReplyBuilder.error(Code.E40017).build());
 			return;
 		}

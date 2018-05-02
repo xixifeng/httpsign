@@ -32,11 +32,11 @@ import java.util.Base64;
  */
 public class BinaryUtil {
 
+	private static final char[] HEXDIGITS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+	
 	private BinaryUtil() {
 	}
-
-	private static final char[] HEX_DIGITS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
-
+	
 	/**
 	 * 对字节数组进行Base64编码
 	 * @param bytes 待编码的字节数组
@@ -62,8 +62,7 @@ public class BinaryUtil {
 	 * @throws NoSuchAlgorithmException 没有找到匹配的算法
 	 */
 	public static byte[] calculateMd5(byte ... bytes) throws NoSuchAlgorithmException {
-		MessageDigest messageDigest = null;
-		messageDigest = MessageDigest.getInstance("MD5");
+		MessageDigest messageDigest = MessageDigest.getInstance("MD5");
 		messageDigest.update(bytes);
 		return messageDigest.digest();
 	}
@@ -79,8 +78,8 @@ public class BinaryUtil {
 		int len = md5Bytes.length;
 		char[] buf = new char[len * 2];
 		for (int i = 0; i < len; i++) {
-			buf[i * 2] = HEX_DIGITS[(md5Bytes[i] >>> 4) & 0x0f];
-			buf[i * 2 + 1] = HEX_DIGITS[md5Bytes[i] & 0x0f];
+			buf[i * 2] = HEXDIGITS[(md5Bytes[i] >>> 4) & 0x0f];
+			buf[i * 2 + 1] = HEXDIGITS[md5Bytes[i] & 0x0f];
 		}
 		return new String(buf);
 	}
