@@ -62,6 +62,8 @@ public final class RangeTime {
 			}
 		}
 		
+		// 在遍历过程中,对容器进行删除操作,必须使用迭代器，否则,会抛出ConcurrentModificationException.
+		
 		/**
 		 * <pre>
 		// 这样写会导致 java.util.ConcurrentModificationException

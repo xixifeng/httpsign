@@ -592,7 +592,8 @@ https://gitee.com/xixifeng.com/httpsign
 https://github.com/xixifeng/httpsign   
 以获得最近更新.
 
-
-
-
+## 推荐开源项目
+- [https://gitee.com/xixifeng.com/fastquery](https://gitee.com/xixifeng.com/fastquery) 基于ASM的DB操作框架
+- [https://gitee.com/xixifeng.com/pjaxpage](https://gitee.com/xixifeng.com/pjaxpage) 支持PJAX的分页解决方案
+- [https://gitee.com/xixifeng.com/httpsign](https://gitee.com/xixifeng.com/httpsign) RESTful API 签名认证 
 
