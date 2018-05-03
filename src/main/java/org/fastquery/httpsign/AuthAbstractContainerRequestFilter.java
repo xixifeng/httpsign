@@ -40,6 +40,9 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.fastquery.httpsign.RangeTime.*;
 
 /**
@@ -47,6 +50,8 @@ import static org.fastquery.httpsign.RangeTime.*;
  * @author mei.sir@aliyun.cn
  */
 public abstract class AuthAbstractContainerRequestFilter implements ContainerRequestFilter, AccessAccount {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(AuthAbstractContainerRequestFilter.class);
 	
 	@Context
 	private HttpServletRequest request;
@@ -159,6 +164,10 @@ public abstract class AuthAbstractContainerRequestFilter implements ContainerReq
 			return;
 		}
 		
+		sign(requestContext, clientAuth, accept, date);
+	}
+
+	private void sign(ContainerRequestContext requestContext, String clientAuth, String accept, String date) throws UnsupportedEncodingException {
 		// 获取accessKeyId
 		String accessKeyId = request.getParameter("accessKeyId");
 		if(accessKeyId==null || "".equals(accessKeyId)) {
@@ -219,6 +228,7 @@ public abstract class AuthAbstractContainerRequestFilter implements ContainerReq
 		try {
 			sign = SignBuilder.sign(accessKeySecret, stringFactor,signatureMethod);
 		} catch (InvalidKeyException | NoSuchAlgorithmException e) {
+			LOG.error(e.getMessage(),e);
 			requestContext.abortWith(ReplyBuilder.error(Code.E40017).build());
 			return;
 		}

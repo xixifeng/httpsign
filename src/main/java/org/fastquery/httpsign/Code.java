@@ -48,8 +48,10 @@ public enum Code {
 	E40016("计算请求body的MD5出错."), 
 	E40017("生成请求头Authorization出错."), 
 	E40018("传过来的Authorization是错的."),
-	E40300("在10分钟内不能传递相同的随机码.");
-
+	E40300("在10分钟内不能传递相同的随机码."),
+	
+	E50300("服务不可用.");
+	
 	private String message;
 	private String msg = "";
 

@@ -29,12 +29,17 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 统一处理Resorce类的异常
  * @author mei.sir@aliyun.cn
  */
 public class InvokeFaultExceptionMapper implements ExceptionMapper<Throwable> {
 		
+	private static final Logger LOG = LoggerFactory.getLogger(InvokeFaultExceptionMapper.class);
+	
 	@Context
 	private HttpServletRequest request;
 	
@@ -42,11 +47,12 @@ public class InvokeFaultExceptionMapper implements ExceptionMapper<Throwable> {
 	private HttpServletResponse response;
 	
 	public Response toResponse(Throwable throwable) {
+		LOG.error(throwable.getMessage(),throwable);
 		if(throwable instanceof WebApplicationException) {
 			WebApplicationException wae = (WebApplicationException) throwable;
 			return ReplyBuilder.error(wae.getResponse().getStatus(),wae.getMessage()).build();
 		} else {
-			throw new RuntimeException("未知错误,有待处理",throwable);
+			return ReplyBuilder.error(Code.E50300).build();
 		}
 	}
 	
