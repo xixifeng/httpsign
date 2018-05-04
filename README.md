@@ -25,7 +25,7 @@
 @javax.ws.rs.Path("helloworld")
 public class HelloWorldResource {
 
-  @org.fastquery.httpsign.Authorization // 作用在方法上,那么该方法必须要签名认证
+  @org.fastquery.httpsign.Authorization // 作用在方法上,那么该方法将进行签名认证
   @javax.ws.rs.GET
   @javax.ws.rs.Produces("text/plain")
   public String getHello() {
@@ -120,7 +120,7 @@ javax.ws.rs.client.WebTarget target = client.target("http://localhost:8080").pat
 |标点符号|本文一律采用英文标点符号|
 
 ### 请求参数名,命名规则
-1. 首字母小写,如果名称由多个单词组成,每个单词的首字母都要大写
+1. 首字母小写,如果名称由多个单词组成,每个单词的首字母要大写
 2. 英文缩写词一律小写
 3. 只能由 [A\~Z]、[a\~z]、[0\~9] 以及字符"-"、"_"、"." 组成参数名
 4. 不能以数字开头
@@ -167,7 +167,6 @@ javax.ws.rs.client.WebTarget target = client.target("http://localhost:8080").pat
 	|API入口|API调用的RS服务的入口|`https://<domain>/path/hi`|
 	|公共header|每个接口都包含的通用请求头|详见 [公共参数](#公共请求头common-request-headers)|
 	|公共参数|每个接口都包含的通用参数|详见 [公共参数](#公共请求头common-request-headers)|
-	|指令参数|API要执行的指令,这里使用action指定,例如action=myinfo|完整的指令请参见各个接口的文档|
 
 
 ## 公共参数
@@ -393,7 +392,7 @@ URL端口与QueryString之间的地址,不含"?",在此称之为URIPath.举例:
 		}
 		```
 	
-		步骤2: 遵循[RFC3986](https://tools.ietf.org/html/rfc3986?spm=a2c4g.11186623.2.6.qtLqZF)规定对请求参数的名称和参数值进行URL编码  
+		步骤2: 遵循[RFC3986](https://tools.ietf.org/html/rfc3986?spm=a2c4g.11186623.2.6.qtLqZF)对请求参数的值进行URL编码  
 	
 		步骤3: 拼接参数  
 		**action=myInfo&limit=15&nonce=1aabcde-5268-3326-c845-56kljgwexe&offset=1&secretKeyId=BKJGW40598092JXMWNRF** 这就是BuildRequestParameters. 
@@ -583,9 +582,10 @@ org.junit.Assert.assertThat(authorization,
 |40014|token认证失败.|
 |40015|有请求body,而没有传递请求头Content-MD5.|
 |40016|计算请求body的MD5出错.|
-|40017|生成请求头Authorization出错.|
+|40017|计算Authorization出错.|
 |40018|传过来的Authorization是错的.|
 |40300|在10分钟内不能传递相同的随机码.|
+|50300|服务不可用.|
 
 版权归[习习风](https://gitee.com/xixifeng.com)所有,请认准开源地址:   
 https://gitee.com/xixifeng.com/httpsign  

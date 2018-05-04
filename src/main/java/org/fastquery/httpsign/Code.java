@@ -46,7 +46,7 @@ public enum Code {
 	E40014("token认证失败."), 
 	E40015("有请求body,而没有传递请求头Content-MD5."),
 	E40016("计算请求body的MD5出错."), 
-	E40017("生成请求头Authorization出错."), 
+	E40017("计算Authorization出错."), 
 	E40018("传过来的Authorization是错的."),
 	E40300("在10分钟内不能传递相同的随机码."),
 	
