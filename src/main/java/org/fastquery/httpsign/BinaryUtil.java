@@ -22,9 +22,16 @@
 
 package org.fastquery.httpsign;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 字节编码工具
@@ -32,7 +39,13 @@ import java.util.Base64;
  */
 public class BinaryUtil {
 
-	private static final char[] HEXDIGITS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+	private static final Logger LOG = LoggerFactory.getLogger(BinaryUtil.class);	
+	
+    private static final char[] DIGITS_LOWER =
+        {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+    
+    private static final char[] DIGITS_UPPER =
+        {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 	
 	private BinaryUtil() {
 	}
@@ -61,26 +74,75 @@ public class BinaryUtil {
 	 * @return md5结果(字节形式)
 	 * @throws NoSuchAlgorithmException 没有找到匹配的算法
 	 */
-	public static byte[] calculateMd5(byte ... bytes) throws NoSuchAlgorithmException {
+	public static byte[] md5(byte ... bytes) throws NoSuchAlgorithmException {
 		MessageDigest messageDigest = MessageDigest.getInstance("MD5");
 		messageDigest.update(bytes);
 		return messageDigest.digest();
 	}
+	
+	/**
+	 * 
+	 * @param str 待计算的字符串
+	 * @param toLowerCase 是否转换成小写
+	 * @return md5 hex
+	 */
+	public static String md5Hex(String str,final boolean toLowerCase) {
+		char[] digits = toLowerCase ? DIGITS_LOWER : DIGITS_UPPER;
+		byte[] bs;
+		try {
+			bs = md5(str.getBytes(Charset.forName("utf-8")));
+		} catch (NoSuchAlgorithmException e) {
+			throw new IllegalArgumentException(e);
+		}
+		final int l = bs.length;
+		final char[] out = new char[l << 1];
+		int j = 0;
+		for (int i = 0; i < l; i++) {
+			out[j++] = digits[(0xF0 & bs[i]) >>> 4];
+			out[j++] = digits[0x0F & bs[i]];
+		}
+
+		return new String(out);
+	}
 
 	/**
-	 *  算出字节数组的md5
-	 * @param bytes 待计算的字节数组
-	 * @return md5结果(16进制字符串形式)
-	 * @throws NoSuchAlgorithmException 没有找到匹配的算法
+	 * 计算文件的md5值
+	 * @param file 文件
+	 * @param toLowerCase 输出的字符串是否转化成小写
+	 * @return md5 hex
 	 */
-	public static String encodeMD5(byte ... bytes) throws NoSuchAlgorithmException {
-		byte[] md5Bytes = calculateMd5(bytes);
-		int len = md5Bytes.length;
-		char[] buf = new char[len * 2];
-		for (int i = 0; i < len; i++) {
-			buf[i * 2] = HEXDIGITS[(md5Bytes[i] >>> 4) & 0x0f];
-			buf[i * 2 + 1] = HEXDIGITS[md5Bytes[i] & 0x0f];
+	public static String md5Hex(File file,final boolean toLowerCase) {
+		char[] digits = toLowerCase ? DIGITS_LOWER : DIGITS_UPPER;
+
+		MessageDigest messageDigest;
+		try {
+			messageDigest = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			throw new IllegalArgumentException(e);
 		}
-		return new String(buf);
+
+		try (FileInputStream data = new FileInputStream(file)) {
+			final byte[] buffer = new byte[1024];
+			int read = data.read(buffer, 0, 1024);
+
+			while (read > -1) {
+				messageDigest.update(buffer, 0, read);
+				read = data.read(buffer, 0, 1024);
+			}
+		} catch (IOException e) {
+			LOG.error(e.getMessage(), e);
+			return "";
+		}
+
+		byte[] bs = messageDigest.digest();
+		final int l = bs.length;
+		final char[] out = new char[l << 1];
+		int j = 0;
+		for (int i = 0; i < l; i++) {
+			out[j++] = digits[(0xF0 & bs[i]) >>> 4];
+			out[j++] = digits[0x0F & bs[i]];
+		}
+
+		return new String(out);
 	}
 }

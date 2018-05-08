@@ -121,7 +121,7 @@ public abstract class AuthAbstractClientRequestFilter implements ClientRequestFi
 				String body = requestContext.getEntity().toString();
 				byte[] bytes;
 				try {
-					bytes = BinaryUtil.calculateMd5(body.getBytes(Charset.forName(SignBuilder.UTF8)));
+					bytes = BinaryUtil.md5(body.getBytes(Charset.forName(SignBuilder.UTF8)));
 				} catch (NoSuchAlgorithmException e) {
 					LOG.warn(e.getMessage(),e);
 					requestContext.abortWith(ReplyBuilder.error(Code.E40016).build());
@@ -132,7 +132,7 @@ public abstract class AuthAbstractClientRequestFilter implements ClientRequestFi
 				File file = (File) requestContext.getEntity();
 				// 计算出file的md5
 				try {
-					contentMD5 = BinaryUtil.toBase64String(BinaryUtil.calculateMd5(Files.readAllBytes(file.toPath())));
+					contentMD5 = BinaryUtil.toBase64String(BinaryUtil.md5(Files.readAllBytes(file.toPath())));
 				} catch (NoSuchAlgorithmException e) {
 					LOG.warn(e.getMessage(),e);
 					requestContext.abortWith(ReplyBuilder.error(Code.E40016).build());

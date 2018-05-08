@@ -15,7 +15,7 @@
 <dependency>
     <groupId>org.fastquery</groupId>
     <artifactId>httpsign</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 ``` 
 
@@ -129,11 +129,11 @@ javax.ws.rs.client.WebTarget target = client.target("http://localhost:8080").pat
 ### 术语表
 | 术语 | 全称 | 中文 | 说明 |
 |:-----|:-----|:-----|:-----|
-|RS|RESTful Web Services|WEB REST服务|REST 架构风格的Web服务|
-|SecurityGroup|Security Group|安全组|安全组制定安全策略|
-|GMT|Greenwich Mean Time|格林尼治标准时间|指位于英国伦敦郊区的皇家格林尼治天文台的标准时间|
-|URIPath|Uniform Resource Identifier Path|统一资源标识符的路径|用于标识某一互联网资源路径|
-|RFC|Request For Comments|一系列以编号排定的文件|几乎所有的互联网标准都有收录在RFC文件之中|
+|`RS`|RESTful Web Services|WEB REST服务|REST 架构风格的Web服务|
+|`SecurityGroup`|Security Group|安全组|安全组制定安全策略|
+|`GMT`|Greenwich Mean Time|格林尼治标准时间|指位于英国伦敦郊区的皇家格林尼治天文台的标准时间|
+|`URIPath`|Uniform Resource Identifier Path|统一资源标识符的路径|用于标识某一互联网资源路径|
+|`RFC`|Request For Comments|一系列以编号排定的文件|几乎所有的互联网标准都有收录在RFC文件之中|
 
 ### 相关名词解释
 1. **字典升序排列**  
@@ -183,12 +183,12 @@ javax.ws.rs.client.WebTarget target = client.target("http://localhost:8080").pat
 ### 公共请求参数(Common Http Request Parameters)
 |名称|是否必选|类型|描述|
 |:-----|:-----:|:-----:|:-----|
-|version|是|`String`|API 版本号,当前值为1|
-|action|是|`String`|接口的指令名称,如:action=myInfo|
-|nonce|是|`String`|随机数,长度范围\[8,36\]|
-|accessKeyId|是|`String`|在云API密钥上申请的标识身份的 accessKeyId,一个 accessKeyId 对应唯一的 accessKeySecret , 而 accessKeySecret 会用来生成请求签名 Signature|
-|signatureMethod|否|`String`|签名算法,目前支持HMACSHA256和HMACSHA1.默认采用:HMACSHA1验证签名|
-|token|否|`String`|临时证书所用的Token,需要结合临时密钥一起使用|
+|`version`|是|`String`|API 版本号,当前值为1|
+|`action`|是|`String`|接口的指令名称,如:action=myInfo|
+|`nonce`|是|`String`|随机数,长度范围\[8,36\]|
+|`accessKeyId`|是|`String`|在云API密钥上申请的标识身份的 accessKeyId,一个 accessKeyId 对应唯一的 accessKeySecret , 而 accessKeySecret 会用来生成请求签名 Signature|
+|`signatureMethod`|否|`String`|签名算法,目前支持HMACSHA256和HMACSHA1.默认采用:HMACSHA1验证签名|
+|`token`|否|`String`|临时证书所用的Token,需要结合临时密钥一起使用|
 
 服务端将从 QueryString 获得这些参数. 
 
@@ -244,6 +244,30 @@ Authorization = "Basic " + Signature
 	assertThat(str, equalTo("BheE8OSZqgEXBcg6TjcrfQ=="));
 	```
 
+假设,给body的是一个文件,计算其Content-MD5:
+
+	```java
+	MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+	try (InputStream data = new URL("https://gitee.com/uploads/36/788636_xixifeng.com.png").openStream()) {
+		final byte[] buffer = new byte[1024];
+		int read = data.read(buffer, 0, 1024);
+	
+		while (read > -1) {
+			messageDigest.update(buffer, 0, read);
+			read = data.read(buffer, 0, 1024);
+		}
+	} catch (IOException e) {
+		throw e;
+	}
+	
+	byte[] md5Bytes = messageDigest.digest();
+	String str = java.util.Base64.getEncoder().encodeToString(md5Bytes);
+	
+	// 正确的值应该是 "5ErvegqUtShUeMfmowveow=="
+	// 断言
+	assertThat(str, equalTo("5ErvegqUtShUeMfmowveow=="));
+	```
+	
 - 5.Accept   
 可选值: application/json 或 application/xml.
 
