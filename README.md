@@ -244,8 +244,8 @@ Authorization = "Basic " + Signature
 	assertThat(str, equalTo("BheE8OSZqgEXBcg6TjcrfQ=="));
 	```
 
-假设,给body的是一个文件,计算其Content-MD5:
-
+	假设,给body的是一个文件,计算其Content-MD5:
+	
 	```java
 	MessageDigest messageDigest = MessageDigest.getInstance("MD5");
 	try (InputStream data = new URL("https://gitee.com/uploads/36/788636_xixifeng.com.png").openStream()) {
@@ -621,3 +621,6 @@ https://github.com/xixifeng/httpsign
 - [https://gitee.com/xixifeng.com/pjaxpage](https://gitee.com/xixifeng.com/pjaxpage) 支持PJAX的分页解决方案
 - [https://gitee.com/xixifeng.com/httpsign](https://gitee.com/xixifeng.com/httpsign) RESTful API 签名认证 
 
+## 反馈
+https://gitee.com/xixifeng.com/httpsign/issues  
+地球人都知道,开源中国秉承自由、开放、分享的精神,本项目每次升级之后,代码和文档手册都会在第一时间完全开源,以供大家查阅、批评、指正.笔者技术水平有限,bug或不周之处在所难免,所以,遇到有问题或更好的建议时,还请大家通过[issue](https://gitee.com/xixifeng.com/httpsign/issues)来向我们反馈.
