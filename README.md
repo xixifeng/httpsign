@@ -69,6 +69,7 @@ public class AuthorizationClientRequestFilter extends
 @ApplicationPath("userResorce")
 public class Application extends ResourceConfig {
 	public Application() throws IOException {
+		register(HelloWorldResource.class);
 		register(AuthorizationContainerRequestFilter.class);
 	}
 }
@@ -79,18 +80,18 @@ JAX-RS客户端:
 ```java
 javax.ws.rs.client.Client client = javax.ws.rs.client.ClientBuilder.newClient();
 client.register(AuthorizationClientRequestFilter.class);
-javax.ws.rs.client.WebTarget target = client.target("http://localhost:8080").path("userResorce/greet");
+javax.ws.rs.client.WebTarget target = client.target("http://localhost:8080").path("userResorce/helloworld");
 // ... ...
 ```
 
-### 在CXF环境里使用
+### 在CXF+Spring环境里使用
 
 服务端:
 
 ```xml
 <jaxrs:server address="http://localhost...">
 	<jaxrs:serviceBeans>
-		<bean class="... ..." /> 
+		<bean class="your package.HelloWorldResource" /> 
 	</jaxrs:serviceBeans>
 	<jaxrs:providers>
 		<bean class="org.fastquery.httpsign.sample.AuthorizationContainerRequestFilter" />
@@ -120,8 +121,8 @@ javax.ws.rs.client.WebTarget target = client.target("http://localhost:8080").pat
 |标点符号|本文一律采用英文标点符号|
 
 ### 请求参数名,命名规则
-1. 首字母小写,如果名称由多个单词组成,每个单词的首字母要大写
-2. 英文缩写词一律小写
+1. 首字母小写,如果参数名由多个单词组成,相连单词的首字母要大写(例: userInfo)
+2. 英文缩写词一律小写(例:vcd)
 3. 只能由 [A\~Z]、[a\~z]、[0\~9] 以及字符"-"、"_"、"." 组成参数名
 4. 不能以数字开头
 5. 不允许出现中文及拼音命名
@@ -133,12 +134,12 @@ javax.ws.rs.client.WebTarget target = client.target("http://localhost:8080").pat
 |`SecurityGroup`|Security Group|安全组|安全组制定安全策略|
 |`GMT`|Greenwich Mean Time|格林尼治标准时间|指位于英国伦敦郊区的皇家格林尼治天文台的标准时间|
 |`URIPath`|Uniform Resource Identifier Path|统一资源标识符的路径|用于标识某一互联网资源路径|
-|`RFC`|Request For Comments|一系列以编号排定的文件|几乎所有的互联网标准都有收录在RFC文件之中|
+|`RFC`|Request For Comments|一系列以编号排定的文件|几乎所有的互联网标准都收录在RFC文件之中|
 
 ### 相关名词解释
 1. **字典升序排列**  
 如同在字典中排列单词一样排序,按照字母表递增顺序排列,参与比较的两个单词,若它们的第一个字母相同,就比较第二个字母,依此类推.  
-例如: zhong zhang zheng zhen, 做字典升序排列后的结果是 zhang zhen zheng zhong. 
+例如: "scheme , java , basic , sql , php" 做字典升序排列后的结果是 "basic , java , php , scheme , sql". 
 
 2. **幂等性**  
 接口在设计上可以被完全相同的URL重复调用多次,而最终得到的结果是一致的.
@@ -186,7 +187,7 @@ javax.ws.rs.client.WebTarget target = client.target("http://localhost:8080").pat
 |`version`|是|`String`|API 版本号,当前值为1|
 |`action`|是|`String`|接口的指令名称,如:action=myInfo|
 |`nonce`|是|`String`|随机数,长度范围\[8,36\]|
-|`accessKeyId`|是|`String`|在云API密钥上申请的标识身份的 accessKeyId,一个 accessKeyId 对应唯一的 accessKeySecret , 而 accessKeySecret 会用来生成请求签名 Signature|
+|`accessKeyId`|是|`String`|accessKey和accessKeySecret从云端申请,accessKeyId 用来标识身份的,一个 accessKeyId 对应唯一的 accessKeySecret , 而 accessKeySecret 会用来生成签名 Signature|
 |`signatureMethod`|否|`String`|签名算法,目前支持HMACSHA256和HMACSHA1.默认采用:HMACSHA1验证签名|
 |`token`|否|`String`|临时证书所用的Token,需要结合临时密钥一起使用|
 
@@ -216,8 +217,8 @@ Authorization = "Basic " + Signature
 - 2.AccessKeySecret  
 服务端颁发给用户的密钥,不能泄露,只允许用户知道. 
 
-- 3.HttpMethod 
-可选值,GET,POST,PUT,DELETE,PATCH,HEAD,OPTIONS.
+- 3.HttpMethod  
+请求方法,可选值[GET,POST,PUT,DELETE,PATCH,HEAD,OPTIONS].
 
 - 4.Content-MD5  
 表示请求主体(Request Body)数据的MD5值,对消息内容(不包括头部)计算MD5值获得128bit(比特位)数字,对该数字进行Base64编码而得到,如果没有Body该值为""(空字符串).  
@@ -275,19 +276,36 @@ Authorization = "Basic " + Signature
 表示此次请求的当前时间,必须为GMT时间,如"Wed, 28 Mar 2018 09:09:19 GMT".  
 以Java代码作为示例,怎么获得GMT时间:
 
-```java
-// RFC 822 日期格式
-String f = "EEE, dd MMM yyyy HH:mm:ss z";
-java.text.SimpleDateFormat rfc822DateFormat = new java.text.SimpleDateFormat(f, java.util.Locale.US);
-rfc822DateFormat.setTimeZone(new java.util.SimpleTimeZone(0, "GMT"));
+	```java
+	// RFC 822 时间格式
+	String f = "EEE, dd MMM yyyy HH:mm:ss 'GMT'";
+	java.text.SimpleDateFormat rfc822DateFormat = new java.text.SimpleDateFormat(f, java.util.Locale.US);
+	rfc822DateFormat.setTimeZone(new java.util.SimpleTimeZone(0, "GMT"));
+	
+	// 将Date格式化成GMT时间格式的字符串
+	java.util.Date date = new java.util.Date();
+	String gmtStr = rfc822DateFormat.format(date);
+	
+	// 将GMT时间格式的字符串解析成Date对象
+	java.util.Date d = rfc822DateFormat.parse(gmtStr);
+	```
 
-// 将date格式化成GMT时间格式的字符串
-java.util.Date date = new java.util.Date();
-String gmtStr = rfc822DateFormat.format(date);
+	推荐使用 JAVA 8+ 的时间格式转换:
+	
+	```java
+	// RFC 822 时间格式
+	String f = "EEE, dd MMM yyyy HH:mm:ss 'GMT'";
+	
+	java.util.Locale l = java.util.Locale.US;
+	java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern(f, l);
+	java.time.LocalDateTime localDateTime = java.time.LocalDateTime.now(java.time.ZoneId.of("GMT"));
+	// 将LocalDateTime格式化成GMT时间格式的字符串
+	String gmt = localDateTime.format(formatter);
+	
+	// 将GMT时间格式的字符串解析成LocalDateTime对象
+	LocalDateTime ldt = LocalDateTime.parse(gmt,formatter);
+	```
 
-// 将GMT时间格式的字符串解析成Date对象
-java.util.Date d = rfc822DateFormat.parse(gmtStr);
-```
 
 - 7.BuildCustomHeaders  
 	所有以`X-Custom-`做为前缀的HTTP Header被称为自定义请求头.    
@@ -303,11 +321,11 @@ java.util.Date d = rfc822DateFormat.parse(gmtStr);
 
 - 8.URIPath   
 URL端口与QueryString之间的地址,不含"?",在此称之为URIPath.举例:   
-若有请求URL"`https://<domain><默认80可以省略>/path/hi?action=myInfo`",那么URIPath为"/path/hi".  
-若有请求URL"`https://<domain>:8080/path/hi?action=myInfo`",那么URIPath为"/path/hi".  
-若有请求URL"`https://<domain>:8080/path/hi`",那么URIPath为"/path/hi".  
-若有请求URL"`https://<domain>:8080/`",那么URIPath为"/".  
-若有请求URL"`https://<domain>:8080?action=myInfo`",那么URIPath为"".  
+若有请求URL "`https://<domain><默认80可以省略>/path/hi?action=myInfo`",那么URIPath为"/path/hi".  
+若有请求URL "`https://<domain>:8080/path/hi?action=myInfo`",那么URIPath为"/path/hi".  
+若有请求URL "`https://<domain>:8080/path/hi`",那么URIPath为"/path/hi".  
+若有请求URL "`https://<domain>:8080/`",那么URIPath为"/".  
+若有请求URL "`https://<domain>:8080?action=myInfo`",那么URIPath为"".  
 以Java代码为示例,获取URIPath:
 
 	```java
@@ -582,7 +600,7 @@ org.junit.Assert.assertThat(authorization,
 自定义错误码由5位数字组成(除0表示成功外),前3位数表示对应的HTTP状态码(HTTP Status Code).目前自定义的错误前缀如下:
 
 - 400XX 请求错误
-- 403XX 被禁止的
+- 403XX 被禁止
 - 404XX 找不到
 - 500XX 内部错误
 - 503XX 服务不可用

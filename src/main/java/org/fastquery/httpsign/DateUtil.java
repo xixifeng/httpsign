@@ -36,7 +36,7 @@ import java.util.SimpleTimeZone;
 public class DateUtil {
 
 	// RFC 822 Date Format
-	private static final String RFC822_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
+	private static final String RFC822_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss 'GMT'";
 	
 	private DateUtil() {
 	}
