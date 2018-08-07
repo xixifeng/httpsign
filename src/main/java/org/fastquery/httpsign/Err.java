@@ -22,38 +22,29 @@
 
 package org.fastquery.httpsign;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- * 统一处理Resorce类的异常
+ * 
  * @author mei.sir@aliyun.cn
  */
-public class InvokeFaultExceptionMapper implements ExceptionMapper<Throwable> {
-		
-	private static final Logger LOG = LoggerFactory.getLogger(InvokeFaultExceptionMapper.class);
-	
-	@Context
-	private HttpServletRequest request;
-	
-	@Context
-	private HttpServletResponse response;
-	
-	public Response toResponse(Throwable throwable) {
-		LOG.error(throwable.getMessage(),throwable);
-		if(throwable instanceof WebApplicationException) {
-			WebApplicationException wae = (WebApplicationException) throwable;
-			return ReplyBuilder.error(wae.getResponse().getStatus(),wae.getMessage()).build();
-		} else {
-			return ReplyBuilder.error(Code.E50300).build();
-		}
-	}
-	
+public interface Err {
+	/**
+	 * 获取自定义编码
+	 * 
+	 * @return 编码
+	 */
+	public int getId();
+
+	/**
+	 * HTTP状态码
+	 * 
+	 * @return 状态码
+	 */
+	public int getStatus();
+
+	/**
+	 * 获取错误信息
+	 * 
+	 * @return 信息
+	 */
+	public String getMessage();
 }

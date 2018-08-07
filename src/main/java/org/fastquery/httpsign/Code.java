@@ -22,12 +22,14 @@
 
 package org.fastquery.httpsign;
 
+import java.util.Objects;
+
 /**
  * 错误码
  * 
  * @author mei.sir@aliyun.cn
  */
-public enum Code {
+public enum Code implements Err {
 
 	E40000("没有传递请求头Authorization."), 
 	E40001("传递的请求头Authorization不符合规范."), 
@@ -48,53 +50,36 @@ public enum Code {
 	E40016("计算请求body的MD5出错."), 
 	E40017("计算Authorization出错."), 
 	E40018("传过来的Authorization是错的."),
+	E40019("参数校验不通过."),
 	E40300("在10分钟内不能传递相同的随机码."),
 	
 	E50300("服务不可用.");
 	
 	private String message;
-	private String msg = "";
+	private int status;
+	private int id;
 
 	private Code(String message) {
+		Objects.requireNonNull(message);
 		this.message = message;
-	}
 
-	/**
-	 * 获取自定义编码
-	 * 
-	 * @return 编码
-	 */
-	public int getId() {
 		String name = this.name();
-		return Integer.parseInt(name.substring(1));
+		this.id = Integer.parseInt(name.substring(1));
+		this.status = Integer.parseInt(name.substring(1).substring(0, 3));
 	}
 
-	/**
-	 * HTTP状态码
-	 * 
-	 * @return 状态码
-	 */
+	@Override
+	public int getId() {
+		return id;
+	}
+
+	@Override
 	public int getStatus() {
-		return getId() / 100;
+		return status;
 	}
 
-	/**
-	 * 获取错误信息
-	 * 
-	 * @return 信息
-	 */
+	@Override
 	public String getMessage() {
-		return message + msg;
-	}
-
-	/**
-	 * 附加描述
-	 * 
-	 * @param msg 详细错误
-	 * @return 当前实例
-	 */
-	public Code appendMsg(String msg) {
-		this.msg = msg == null ? this.msg : msg;
-		return this;
+		return message;
 	}
 }

@@ -4,12 +4,12 @@
 
 	<groupId>org.fastquery</groupId>
 	<artifactId>httpsign</artifactId>
-	<version>1.0.3</version>
+	<version>1.0.4</version>
 	<packaging>jar</packaging>
 
 
 	<name>httpsign</name>
-	<description>RESTful API 签名认证</description>
+	<description>RESTful API signature verification(签名认证)</description>
 	<url>https://github.com/xixifeng/httpsign</url>
 
 	<scm>

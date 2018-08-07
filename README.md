@@ -15,7 +15,7 @@
 <dependency>
     <groupId>org.fastquery</groupId>
     <artifactId>httpsign</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 </dependency>
 ``` 
 
@@ -641,4 +641,8 @@ https://github.com/xixifeng/httpsign
 
 ## 反馈
 https://gitee.com/xixifeng.com/httpsign/issues  
-地球人都知道,开源中国秉承自由、开放、分享的精神,本项目每次升级之后,代码和文档手册都会在第一时间完全开源,以供大家查阅、批评、指正.笔者技术水平有限,bug或不周之处在所难免,所以,遇到有问题或更好的建议时,还请大家通过[issue](https://gitee.com/xixifeng.com/httpsign/issues)来向我们反馈.
+秉承自由、开放、分享的精神,本项目每次升级之后,代码和文档手册都会在第一时间完全开源,以供大家查阅、批评、指正.笔者技术水平有限,bug或不周之处在所难免,所以,遇到有问题或更好的建议时,还请大家通过[issue](https://gitee.com/xixifeng.com/httpsign/issues)来向我们反馈.
+
+## 捐助
+Httpsign 采用 Apache 许可的开源项目, 使用完全自由, 免费.  如果你从 httpsign  收到积极的启发, 可以用捐助来表示你的谢意.
+

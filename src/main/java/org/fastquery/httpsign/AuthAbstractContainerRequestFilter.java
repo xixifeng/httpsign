@@ -55,7 +55,7 @@ public abstract class AuthAbstractContainerRequestFilter implements ContainerReq
 	
 	@Context
 	private HttpServletRequest request;
-
+	
 	/**
 	 * 构建参与sign的Query String
 	 * 
@@ -80,7 +80,7 @@ public abstract class AuthAbstractContainerRequestFilter implements ContainerReq
 
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
-		
+				
 		String nonce = request.getParameter("nonce");
 		if(nonce == null) {
 			requestContext.abortWith(ReplyBuilder.error(Code.E40008).build());
@@ -238,7 +238,7 @@ public abstract class AuthAbstractContainerRequestFilter implements ContainerReq
 		if (!authorization.equals(clientAuth)) {
 
 			requestContext
-					.abortWith(ReplyBuilder.error(Code.E40018.appendMsg("服务端计算出的Authorization的是" + authorization)).build());
+					.abortWith(ReplyBuilder.error(Code.E40018).build());
 
 		}
 	}

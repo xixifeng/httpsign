@@ -22,77 +22,77 @@
 
 package org.fastquery.httpsign;
 
+import java.util.Objects;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 /**
  * 应答构建
+ * 
  * @author mei.sir@aliyun.cn
  */
 public class ReplyBuilder {
-	private JSON data;
-
 	private ReplyBuilder() {
 	}
-	
+
 	/**
 	 * 构建成功 Response
+	 * 
 	 * @param data JSON对象数据
 	 * @return ResponseBuilder
 	 */
 	public static ResponseBuilder success(JSONObject data) {
 		JSONObject json = new JSONObject();
 		json.put("code", 0);
-		json.put("data",data);
+		json.put("data", data);
 		return Response.ok(json.toJSONString());
 	}
 
 	/**
 	 * 构建成功 Response
+	 * 
 	 * @param data JSON数组数据
 	 * @return ResponseBuilder
 	 */
 	public static ResponseBuilder success(JSONArray data) {
 		JSONObject json = new JSONObject();
 		json.put("code", 0);
-		json.put("data",data);
+		json.put("data", data);
 		return Response.ok(json.toJSONString());
 	}
 
-	/**
-	 * 构建错误 Response
-	 * @param code 自定义的错误编码
-	 * @return ResponseBuilder
-	 */
-	public static ResponseBuilder error(Code code) {
-		JSONObject json = new JSONObject();
-		json.put("code", code.getId());
-		json.put("message", code.getMessage());
-		return  Response.ok(json.toJSONString()).status(code.getStatus());
+	public static ResponseBuilder error(Err err) {
+		return error(err.getId(), err.getStatus(), err.getMessage());
 	}
 	
 	/**
-	 * 构建错误 Response, 该方法不对外
-	 * @param status HTTP Status
-	 * @param message 错误信息
+	 * 
+	 * @param err 实现于Err的实例
+	 * @param append 不能传递null
 	 * @return ResponseBuilder
 	 */
-	static ResponseBuilder error(int status,String message) {
-		JSONObject json = new JSONObject();
-		json.put("code", status);
-		json.put("message", message==null?"":message);
-		return  Response.ok(json.toJSONString()).status(status);
+	public static ResponseBuilder error(Err err,String append) {
+		Objects.requireNonNull(append);
+		return error(err.getId(), err.getStatus(), err.getMessage() + append);
 	}
-	
+
 	/**
-	 * 获取业务数据
-	 * @return JSON数据
+	 * 仅供内部使用
+	 * 
+	 * @param code 错误码
+	 * @param status http 状态码
+	 * @param message 信息 不能传递null
+	 * @return ResponseBuilder
 	 */
-	public JSON getData() {
-		return data;
+	static ResponseBuilder error(int code, int status, String message) {
+		Objects.requireNonNull(message);
+		JSONObject json = new JSONObject();
+		json.put("code", code);
+		json.put("message", message);
+		return Response.ok(json.toJSONString()).status(status);
 	}
 }
