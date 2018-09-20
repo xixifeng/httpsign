@@ -150,7 +150,7 @@ public abstract class AuthAbstractContainerRequestFilter implements ContainerReq
 			requestContext.abortWith(ReplyBuilder.error(Code.E40006).build());
 			return;
 		}
-		*/
+		
 		
 		// 校验action
 		String action = request.getParameter("action");
@@ -158,6 +158,7 @@ public abstract class AuthAbstractContainerRequestFilter implements ContainerReq
 			requestContext.abortWith(ReplyBuilder.error(Code.E40007).build());
 			return;
 		}
+		*/
 		
 		// 校验nonce
 		int nonceLen = nonce.length();
