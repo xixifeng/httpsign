@@ -140,6 +140,7 @@ public abstract class AuthAbstractContainerRequestFilter implements ContainerReq
 		}
 		
 		// 校验version字段
+		/*
 		String version = request.getParameter("version");
 		if(version == null) {
 			requestContext.abortWith(ReplyBuilder.error(Code.E40005).build());
@@ -149,6 +150,7 @@ public abstract class AuthAbstractContainerRequestFilter implements ContainerReq
 			requestContext.abortWith(ReplyBuilder.error(Code.E40006).build());
 			return;
 		}
+		*/
 		
 		// 校验action
 		String action = request.getParameter("action");
@@ -170,7 +172,7 @@ public abstract class AuthAbstractContainerRequestFilter implements ContainerReq
 	private void sign(ContainerRequestContext requestContext, String clientAuth, String accept, String date) throws UnsupportedEncodingException {
 		// 获取accessKeyId
 		String accessKeyId = request.getParameter("accessKeyId");
-		if(accessKeyId==null || "".equals(accessKeyId)) {
+		if(accessKeyId==null || accessKeyId.length() < 8 || accessKeyId.length() > 36) {
 			requestContext.abortWith(ReplyBuilder.error(Code.E40010).build());
 			return;
 		}

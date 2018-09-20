@@ -69,7 +69,7 @@ public abstract class AuthAbstractClientRequestFilter implements ClientRequestFi
 	}
 
 	/**
-	 * 给予默认值: nonce,version,Authorization,Accept,Content-MD5,Date,User-Agent,signatureMethod
+	 * 给予默认值: nonce,Authorization,Accept,Content-MD5,Date,User-Agent,signatureMethod
 	 */
 	@Override
 	public void filter(ClientRequestContext requestContext) throws IOException {
@@ -78,7 +78,7 @@ public abstract class AuthAbstractClientRequestFilter implements ClientRequestFi
 
 		URI uri = requestContext.getUri();
 		String nonce = UUID.randomUUID().toString();
-		uri = UriBuilder.fromUri(uri).queryParam("nonce", nonce).queryParam("version", 1).build();
+		uri = UriBuilder.fromUri(uri).queryParam("nonce", nonce).build();
 		requestContext.setUri(uri);
 
 		// 获取accessKeyId 直接去读配置文件
@@ -86,6 +86,10 @@ public abstract class AuthAbstractClientRequestFilter implements ClientRequestFi
 
 		// 根据 accessKeyId 获取 accessKeySecret
 		String accessKeySecret = getAccessKeySecret(accessKeyId);
+		if(accessKeySecret == null) {
+			requestContext.abortWith(ReplyBuilder.error(Code.E40011).build());
+			return;
+		}
 
 		// 签名算法
 		String signatureMethod = Algorithm.HMACSHA1.name();
@@ -141,6 +145,10 @@ public abstract class AuthAbstractClientRequestFilter implements ClientRequestFi
 			}
 		}
 		String contentType = requestContext.getHeaderString("Accept");
+		if(contentType==null) {
+			contentType = "application/json";
+			header("Accept", contentType, requestContext);
+		}
 		String date = DateUtil.formatRfc822Date();
 		String uriPath = uri.getPath();
 

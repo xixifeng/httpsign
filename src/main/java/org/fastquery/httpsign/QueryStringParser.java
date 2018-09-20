@@ -31,24 +31,30 @@ import java.util.StringTokenizer;
  * @author mei.sir@aliyun.cn
  */
 class QueryStringParser {
-	Map<String, String> paramMap;
+	
+	private Map<String, String> paramMap;
 
 	QueryStringParser(String queryString) {
 		if (queryString == null) {
 			paramMap = null;
-			return;
-		} else
+		} else {
 			paramMap = new HashMap<>();
-		StringTokenizer st = new StringTokenizer(queryString, "&");
-		while (st.hasMoreTokens()) {
-			String pairs = st.nextToken();
-			String key = pairs.substring(0, pairs.indexOf('='));
-			String value = pairs.substring(pairs.indexOf('=') + 1);
-			paramMap.put(key, value);
+			StringTokenizer st = new StringTokenizer(queryString, "&");
+			while (st.hasMoreTokens()) {
+				String pairs = st.nextToken();
+				String key = pairs.substring(0, pairs.indexOf('='));
+				String value = pairs.substring(pairs.indexOf('=') + 1);
+				paramMap.put(key, value);
+			}
 		}
+	
 	}
 
 	String get(String key) {
-		return paramMap.get(key);
+		if(paramMap==null) {
+			return null;
+		} else {
+			return paramMap.get(key);	
+		}
 	}
 }

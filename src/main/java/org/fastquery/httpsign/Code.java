@@ -36,12 +36,13 @@ public enum Code implements Err {
 	E40002("传递的请求头Accept不符合要求,要么是\"application/json\" 要么是 \"application/xml\"."), 
 	E40003("请求头Date必须传递,并且必须是HTTP 1.1协议中规定的GMT时间."), 
 	E40004("请求端的时间不能比服务器时间快10分钟或慢10分钟."), 
-	E40005("没有传递请求参数version."), 
-	E40006("传递的version参数,不符合要求."), 
+	// API 若是多版本满天飞,简直是噩梦,如其解决问题,不如消灭问题
+	//E40005("没有传递请求参数version."), 
+	//E40006("传递的version参数,不符合要求."), 
 	E40007("名称为action的请求参数没有传递."), 
 	E40008("名称为nonce的请求参数没有传递."), 
 	E40009("nonce的长度不能超过36且不能小与8."), 
-	E40010("名称为accessKeyId的请求参数没有传递."), 
+	E40010("名称为accessKeyId的请求参数没有传递或是范围越界,允许长度范围[8,36]."), 
 	E40011("根据accessKeyId没有找到对应的accessKeySecret."), 
 	E40012("签名算法要么传递HMACSHA1或HMACSHA256,要不传递(默认:HMACSHA1)."), 
 	E40013("传递的token错误."), 
@@ -52,7 +53,8 @@ public enum Code implements Err {
 	E40018("传过来的Authorization是错的."),
 	E40019("参数校验不通过."),
 	E40300("在10分钟内不能传递相同的随机码."),
-	
+	E40301("该接口只允许登录前访问,不允许登录后访问."),
+	E40302("该接口只允许登录后访问."),
 	E50300("服务不可用.");
 	
 	private String message;

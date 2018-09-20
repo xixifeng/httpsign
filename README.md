@@ -184,10 +184,9 @@ javax.ws.rs.client.WebTarget target = client.target("http://localhost:8080").pat
 ### 公共请求参数(Common Http Request Parameters)
 |名称|是否必选|类型|描述|
 |:-----|:-----:|:-----:|:-----|
-|`version`|是|`String`|API 版本号,当前值为1|
 |`action`|是|`String`|接口的指令名称,如:action=myInfo|
 |`nonce`|是|`String`|随机数,长度范围\[8,36\]|
-|`accessKeyId`|是|`String`|accessKey和accessKeySecret从云端申请,accessKeyId 用来标识身份的,一个 accessKeyId 对应唯一的 accessKeySecret , 而 accessKeySecret 会用来生成签名 Signature|
+|`accessKeyId`|是|`String`|accessKeyId(长度范围\[8,36\])和accessKeySecret(长度范围\[6,36\])从云端申请,accessKeyId 用来标识身份的,一个 accessKeyId 对应唯一的 accessKeySecret , 而 accessKeySecret 会用来生成签名 Signature|
 |`signatureMethod`|否|`String`|签名算法,目前支持HMACSHA256和HMACSHA1.默认采用:HMACSHA1验证签名|
 |`token`|否|`String`|临时证书所用的Token,需要结合临时密钥一起使用|
 
@@ -612,8 +611,6 @@ org.junit.Assert.assertThat(authorization,
 |40002|传递的请求头Accept不符合要求,要么是"application/json" 要么是 "application/xml".|
 |40003|请求头Date必须传递,并且必须是HTTP 1.1协议中规定的GMT时间.|
 |40004|请求端的时间不能比服务器时间快10分钟或慢10分钟.|
-|40005|没有传递请求参数version.|
-|40006|传递的version参数,不符合要求.|
 |40007|名称为action的请求参数没有传递.|
 |40008|名称为nonce的请求参数没有传递.|
 |40009|nonce的长度不能超过36且不能小与8.|
@@ -644,5 +641,5 @@ https://gitee.com/xixifeng.com/httpsign/issues
 秉承自由、开放、分享的精神,本项目每次升级之后,代码和文档手册都会在第一时间完全开源,以供大家查阅、批评、指正.笔者技术水平有限,bug或不周之处在所难免,所以,遇到有问题或更好的建议时,还请大家通过[issue](https://gitee.com/xixifeng.com/httpsign/issues)来向我们反馈.
 
 ## 捐助
-Httpsign 采用 Apache 许可的开源项目, 使用完全自由, 免费.  如果你从 httpsign  收到积极的启发, 可以用捐助来表示你的谢意.
+Httpsign 采用 Apache 许可的开源项目, 使用完全自由, 免费.  如果 httpsign  对你有帮助, 可以用捐助来表示谢意.
 

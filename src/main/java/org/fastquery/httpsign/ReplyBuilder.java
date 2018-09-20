@@ -24,6 +24,7 @@ package org.fastquery.httpsign;
 
 import java.util.Objects;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
@@ -93,6 +94,6 @@ public class ReplyBuilder {
 		JSONObject json = new JSONObject();
 		json.put("code", code);
 		json.put("message", message);
-		return Response.ok(json.toJSONString()).status(status);
+		return Response.ok(json.toJSONString()).type(MediaType.APPLICATION_JSON).status(status);
 	}
 }
