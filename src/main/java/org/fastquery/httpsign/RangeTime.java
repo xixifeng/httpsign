@@ -57,7 +57,7 @@ public final class RangeTime {
 		Iterator<Long> iterator = map.keySet().iterator();
 		while (iterator.hasNext()) {
 			Long k = iterator.next();
-			if (Math.abs(k.longValue() - current) > SignBuilder.TIME_LIMIT * 2) {
+			if (current - k.longValue() > SignBuilder.TIME_LIMIT * 2) {
 				map.remove(k);
 			}
 		}

@@ -175,7 +175,7 @@ javax.ws.rs.client.WebTarget target = client.target("http://localhost:8080").pat
 |名称|是否必选|描述|
 |:-----|:-----:|:-----|
 |Authorization|是|用于验证请求合法性的认证信息|
-|Accept|是|默认:"application/json",表示发送端(客户端)希望从服务端接受到的数据类型|
+|Accept|是|默认:"application/json",表示发送端(客户端)希望从服务端接收到的数据类型|
 |Content-Length|是|[RFC2616](https://tools.ietf.org/html/rfc2616)中定义的HTTP请求内容长度(一般的http客户端工具都会自动带上这个请求头)|
 |Date|是|HTTP 1.1协议中规定的GMT时间,例如：Wed, 28 Mar 2018 09:09:19 GMT|
 |Host|是|访问Host值(一般的http客户端工具都会自动带上这个请求头)|

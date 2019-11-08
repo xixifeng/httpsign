@@ -22,6 +22,8 @@
 
 package org.fastquery.httpsign;
 
+import javax.ws.rs.core.Response;
+
 /**
  * 
  * @author mei.sir@aliyun.cn
@@ -32,19 +34,27 @@ public interface Err {
 	 * 
 	 * @return 编码
 	 */
-	public int getId();
+	int getId();
 
 	/**
 	 * HTTP状态码
 	 * 
 	 * @return 状态码
 	 */
-	public int getStatus();
+	int getStatus();
 
 	/**
 	 * 获取错误信息
 	 * 
 	 * @return 信息
 	 */
-	public String getMessage();
+	String getMessage();
+	
+	default Response toResponse() {
+		return ReplyBuilder.error(this).build();
+	}
+	
+	default Response toResponse(String append) {
+		return ReplyBuilder.error(this,append).build();
+	}
 }

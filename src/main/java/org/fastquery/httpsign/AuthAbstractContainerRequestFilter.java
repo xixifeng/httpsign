@@ -83,13 +83,13 @@ public abstract class AuthAbstractContainerRequestFilter implements ContainerReq
 				
 		String nonce = request.getParameter("nonce");
 		if(nonce == null) {
-			requestContext.abortWith(ReplyBuilder.error(Code.E40008).build());
+			requestContext.abortWith(Code.E40008.toResponse());
 			return;
 		}
 		
 		// 10分钟内不能传递相同的随机码
 		if(exists(nonce)) {
-			requestContext.abortWith(ReplyBuilder.error(Code.E40300).build());
+			requestContext.abortWith(Code.E40300.toResponse());
 			return;
 		}
 		// 10分钟内不能传递相同的随机码 End
@@ -98,27 +98,27 @@ public abstract class AuthAbstractContainerRequestFilter implements ContainerReq
 		String clientAuth = requestContext.getHeaderString("Authorization");
 		// 检测Authorization是否已传递
 		if(clientAuth==null) {
-			requestContext.abortWith(ReplyBuilder.error(Code.E40000).build());
+			requestContext.abortWith(Code.E40000.toResponse());
 			return;
 		}
 		
 		// 校验Authorization长度是否够
 		if(clientAuth.length() != SignBuilder.AUTH_LEN) {
-			requestContext.abortWith(ReplyBuilder.error(Code.E40001).build());
+			requestContext.abortWith(Code.E40001.toResponse());
 			return;
 		}
 		
 		// 校验accept
 		String accept = requestContext.getHeaderString("Accept");
-		if(accept!=null && !MediaType.APPLICATION_JSON.equals(accept) && !MediaType.APPLICATION_XML.equals(accept) ) {
-			requestContext.abortWith(ReplyBuilder.error(Code.E40002).build());
+		if(accept!=null && !MediaType.APPLICATION_JSON.equals(accept) && !MediaType.APPLICATION_XML.equals(accept) && !"image/*".equals(accept)) {
+			requestContext.abortWith(Code.E40002.toResponse());
 			return;
 		}
 		
 		// 校验date
 		String date = requestContext.getHeaderString("Date");
 		if(date==null) {
-			requestContext.abortWith(ReplyBuilder.error(Code.E40003).build());
+			requestContext.abortWith(Code.E40003.toResponse());
 			return;
 		}
 		// 检测是否符合GMT格式
@@ -126,14 +126,14 @@ public abstract class AuthAbstractContainerRequestFilter implements ContainerReq
 		try {
 			clientDate = DateUtil.parseRfc822Date(date);
 		} catch (ParseException e) {
-			requestContext.abortWith(ReplyBuilder.error(Code.E40003).build());
+			requestContext.abortWith(Code.E40003.toResponse());
 			return;
 		}
 				
 		// 请求端的时间不能比服务器时间快10分钟或慢10分钟
 		long current = System.currentTimeMillis();
 		if(Math.abs(current - clientDate.getTime()) > SignBuilder.TIME_LIMIT) {
-			requestContext.abortWith(ReplyBuilder.error(Code.E40004).build());
+			requestContext.abortWith(Code.E40004.toResponse());
 			return;
 		} else {
 			add(current,nonce);
@@ -143,11 +143,11 @@ public abstract class AuthAbstractContainerRequestFilter implements ContainerReq
 		/*
 		String version = request.getParameter("version");
 		if(version == null) {
-			requestContext.abortWith(ReplyBuilder.error(Code.E40005).build());
+			requestContext.abortWith(Code.E40005.);
 			return;
 		}
 		if(!"1".equals(version)) {
-			requestContext.abortWith(ReplyBuilder.error(Code.E40006).build());
+			requestContext.abortWith(Code.E40006.);
 			return;
 		}
 		
@@ -155,7 +155,7 @@ public abstract class AuthAbstractContainerRequestFilter implements ContainerReq
 		// 校验action
 		String action = request.getParameter("action");
 		if(action == null) {
-			requestContext.abortWith(ReplyBuilder.error(Code.E40007).build());
+			requestContext.abortWith(Code.E40007.toResponse());
 			return;
 		}
 		*/
@@ -163,7 +163,7 @@ public abstract class AuthAbstractContainerRequestFilter implements ContainerReq
 		// 校验nonce
 		int nonceLen = nonce.length();
 		if(nonceLen<8 || nonceLen>36) {
-			requestContext.abortWith(ReplyBuilder.error(Code.E40009).build());
+			requestContext.abortWith(Code.E40009.toResponse());
 			return;
 		}
 		
@@ -174,21 +174,21 @@ public abstract class AuthAbstractContainerRequestFilter implements ContainerReq
 		// 获取accessKeyId
 		String accessKeyId = request.getParameter("accessKeyId");
 		if(accessKeyId==null || accessKeyId.length() < 8 || accessKeyId.length() > 36) {
-			requestContext.abortWith(ReplyBuilder.error(Code.E40010).build());
+			requestContext.abortWith(Code.E40010.toResponse());
 			return;
 		}
 		
 		// 根据 accessKeyId 获取 accessKeySecret
 		String accessKeySecret = getAccessKeySecret(accessKeyId);
 		if(accessKeySecret == null) {
-			requestContext.abortWith(ReplyBuilder.error(Code.E40011).build());
+			requestContext.abortWith(Code.E40011.toResponse());
 			return;
 		}
 		
 		// 签名算法
 		String signatureMethod = request.getParameter("signatureMethod");
 		if(signatureMethod!=null && !Algorithm.HMACSHA1.name().equals(signatureMethod) && !Algorithm.HMACSHA256.name().equals(signatureMethod) ) {
-			requestContext.abortWith(ReplyBuilder.error(Code.E40012).build());
+			requestContext.abortWith(Code.E40012.toResponse());
 			return;
 		}
 		
@@ -199,7 +199,7 @@ public abstract class AuthAbstractContainerRequestFilter implements ContainerReq
 		String httpMethod = requestContext.getMethod();
 		String contentMD5 = requestContext.getHeaderString("Content-MD5");
 		if(requestContext.getLength() > 0 && contentMD5 == null) {
-			requestContext.abortWith(ReplyBuilder.error(Code.E40015).build());
+			requestContext.abortWith(Code.E40015.toResponse());
 			return;
 		}
 		String uriPath = requestContext.getUriInfo().getRequestUri().getPath();		
@@ -232,7 +232,7 @@ public abstract class AuthAbstractContainerRequestFilter implements ContainerReq
 			sign = SignBuilder.sign(accessKeySecret, stringFactor,signatureMethod);
 		} catch (InvalidKeyException | NoSuchAlgorithmException e) {
 			LOG.error(e.getMessage(),e);
-			requestContext.abortWith(ReplyBuilder.error(Code.E40017).build());
+			requestContext.abortWith(Code.E40017.toResponse());
 			return;
 		}
 
@@ -241,7 +241,7 @@ public abstract class AuthAbstractContainerRequestFilter implements ContainerReq
 		if (!authorization.equals(clientAuth)) {
 
 			requestContext
-					.abortWith(ReplyBuilder.error(Code.E40018).build());
+					.abortWith(Code.E40018.toResponse());
 
 		}
 	}

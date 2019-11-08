@@ -87,7 +87,7 @@ public abstract class AuthAbstractClientRequestFilter implements ClientRequestFi
 		// 根据 accessKeyId 获取 accessKeySecret
 		String accessKeySecret = getAccessKeySecret(accessKeyId);
 		if(accessKeySecret == null) {
-			requestContext.abortWith(ReplyBuilder.error(Code.E40011).build());
+			requestContext.abortWith(Code.E40011.toResponse());
 			return;
 		}
 
@@ -128,7 +128,7 @@ public abstract class AuthAbstractClientRequestFilter implements ClientRequestFi
 					bytes = BinaryUtil.md5(body.getBytes(Charset.forName(SignBuilder.UTF8)));
 				} catch (NoSuchAlgorithmException e) {
 					LOG.warn(e.getMessage(),e);
-					requestContext.abortWith(ReplyBuilder.error(Code.E40016).build());
+					requestContext.abortWith(Code.E40016.toResponse());
 					return;
 				}
 				contentMD5 = BinaryUtil.toBase64String(bytes);
@@ -139,7 +139,7 @@ public abstract class AuthAbstractClientRequestFilter implements ClientRequestFi
 					contentMD5 = BinaryUtil.toBase64String(BinaryUtil.md5(Files.readAllBytes(file.toPath())));
 				} catch (NoSuchAlgorithmException e) {
 					LOG.warn(e.getMessage(),e);
-					requestContext.abortWith(ReplyBuilder.error(Code.E40016).build());
+					requestContext.abortWith(Code.E40016.toResponse());
 					return;
 				}
 			}
@@ -159,7 +159,7 @@ public abstract class AuthAbstractClientRequestFilter implements ClientRequestFi
 			sign = SignBuilder.sign(accessKeySecret, stringFactor,signatureMethod);
 		} catch (InvalidKeyException | NoSuchAlgorithmException e) {
 			LOG.warn(e.getMessage(),e);
-			requestContext.abortWith(ReplyBuilder.error(Code.E40017).build());
+			requestContext.abortWith(Code.E40017.toResponse());
 			return;
 		}
 		String authorization = SignBuilder.buidAuthorization(sign);
